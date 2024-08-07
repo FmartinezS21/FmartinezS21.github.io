@@ -1,90 +1,88 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acceso a Aniversario</title>
-    <link href="https://fonts.googleapis.com/css2?family=Amifer&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./assent/css/styles2.css">
-    <style>
-        body {
-            margin: 0;
-            font-family: 'Amifer', cursive;
-            background-color: #bc00b2;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-
-        .login-container {
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            width: 80%;
-            max-width: 400px;
-        }
-
-        h1 {
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
-
-        /* Estilos para centrar correctamente el input de tipo date */
-        input[type="date"] {
-            width: calc(100% - 22px); /* Ajustar el ancho para que no se desborde */
-            padding: 10px;
-            margin-bottom: 10px;
-            font-size: 16px;
-            text-align: center; /* Centrar el texto dentro del input */
-            box-sizing: border-box; /* Asegurar que el padding se incluya en el ancho total */
-        }
-
-        input[type="submit"] {
-            width: 100%;
-            padding: 10px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        input[type="submit"]:hover {
-            background-color: #45a049;
-        }
-
-        #error-msg {
-            color: red;
-            margin-top: 10px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aniversario</title>
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="./assent/css/panda.css" />
+  <style>
+    .error-message {
+      color: red;
+      margin-top: 5px;
+      text-align: center; /* Centra el texto */
+    }
+    .tooltip {
+      position: absolute;
+      background-color: #fff;
+      color: #000;
+      border: 10px solid #ccc;
+      padding: 5px;
+      border-radius: 5px;
+      top: 3em;
+      left: 100%;
+      transform: translateX(-50%);
+      display: none;
+      z-index: 10;
+    }
+  </style>
 </head>
-<body>
-    <div class="login-container">
-        <h1>Ingrese la fecha de nuestro aniversario:</h1>
-        <form id="login-form" onsubmit="return validateForm()">
-            <input type="date" id="fecha" required>
-            <input type="submit" value="Acceder">
-        </form>
-        <p id="error-msg"></p>
-    </div>
 
-    <script>
-        function validateForm() {
-            var fechaIngresada = document.getElementById("fecha").value;
-            var fechaPermitida = "2019-08-07"; // Fecha de aniversario permitida en formato YYYY-MM-DD
-            
-            if (fechaIngresada === fechaPermitida) {
-                window.location.href = "index.html";
-                return false;
-            } else {
-                document.getElementById("error-msg").innerText = "Fecha incorrecta. Intente nuevamente.";
-                return false;
-            }
-        }
-    </script>
+<body>
+  <div class="container">
+    <form id="loginForm" action="panda.html" method="get" onsubmit="return validatePassword()">
+      <label for="password">Contraseña:</label>
+      <input type="password" id="password" name="password" placeholder="Adivina la contraseña..." />
+      <button type="submit">Entrar</button>
+      <p class="error-message" id="errorMessage"></p>
+    </form>
+    <div class="ear-l"></div>
+    <div class="ear-r"></div>
+    <div class="panda-face">
+      <div class="blush-l"></div>
+      <div class="blush-r"></div>
+      <div class="eye-l">
+        <div class="eyeball-l"></div>
+      </div>
+      <div class="eye-r">
+        <div class="eyeball-r"></div>
+      </div>
+      <div class="nose" onclick="showTooltip()"> <!-- Añadido evento onclick -->
+        <div class="tooltip" id="tooltip">Vuela como el viento tiro al blanco.</div> <!-- Añadido tooltip -->
+      </div>
+      <div class="mouth"></div>
+    </div>
+    <div class="hand-l"></div>
+    <div class="hand-r"></div>
+    <div class="paw-l"></div>
+    <div class="paw-r"></div>
+  </div>
+  <!-- Script -->
+  <script src="./assent/js/panda.js"></script>
+  <script>
+    function showTooltip() {
+      const tooltip = document.getElementById('tooltip');
+      tooltip.style.display = 'block';
+      setTimeout(() => {
+        tooltip.style.display = 'none';
+      }, 1500); // Ocultar después de 3 segundos
+    }
+
+    function validatePassword() {
+      const password = document.getElementById('password').value;
+      const errorMessage = document.getElementById('errorMessage');
+      
+      if (password === "") {
+        errorMessage.textContent = "Esa no es la contraseña... El oso tiene una pista jijijij";
+        return false;
+      }
+      
+      // Validar contraseña aquí si es necesario
+      
+      return true;
+    }
+  </script>
 </body>
 </html>
