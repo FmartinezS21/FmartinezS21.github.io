@@ -35,10 +35,10 @@
   <div class="container">
     <form id="loginForm" action="panda.html" method="get" onsubmit="return validatePassword()">
       <label for="password">Contraseña:</label>
-      <input type="password" id="password" name="password" placeholder="Adivina la contraseña..." />
+      <input type="password" id="password" name="password" placeholder="Adivina la contraseña..." oninput="clearErrorMessage()" />
       <button type="submit">Entrar</button>
       <p class="error-message" id="errorMessage"></p>
-    </form>
+  </form>
     <div class="ear-l"></div>
     <div class="ear-r"></div>
     <div class="panda-face">
@@ -68,21 +68,27 @@
       tooltip.style.display = 'block';
       setTimeout(() => {
         tooltip.style.display = 'none';
-      }, 1500); // Ocultar después de 3 segundos
+      }, 1500); // Ocultar después de 1.5 segundos
     }
 
     function validatePassword() {
       const password = document.getElementById('password').value;
       const errorMessage = document.getElementById('errorMessage');
-      
+
       if (password === "") {
-        errorMessage.textContent = "Esa no es la contraseña... El oso tiene una pista jijijij";
-        return false;
+          errorMessage.textContent = "Por favor ingresa una contraseña.";
+          return false;
+      } else if (password === "toystory") {
+          return true;
+      } else {
+          errorMessage.textContent = "Esa no es la contraseña... El oso tiene una pista jijijiji.";
+          return false;
       }
-      
-      // Validar contraseña aquí si es necesario
-      
-      return true;
+    }
+
+    function clearErrorMessage() {
+      const errorMessage = document.getElementById('errorMessage');
+      errorMessage.textContent = "";
     }
   </script>
 </body>
