@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="assent/images/corazon5.png" type="image/png">
+  <title>Cuenta Regresiva</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      color: #333;
+    }
+    #countdown-container {
+      margin: 20px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      max-width: 600px;
+    }
+    #countdown-list {
+      margin-top: 20px;
+    }
+    .countdown-item {
+      margin-bottom: 20px;
+      padding: 10px;
+      background: #e0f7fa;
+      border-radius: 8px;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+    #countdown {
+      font-size: 40px;
+      font-weight: bold;
+      color: #00796b;
+    }
+    #event-description {
+      margin-top: 10px;
+      font-size: 18px;
+      color: #555;
+    }
+    input[type="datetime-local"], input[type="text"] {
+      font-size: 16px;
+      padding: 10px;
+      margin: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    button {
+      font-size: 16px;
+      padding: 10px 20px;
+      background-color: #00796b;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    button:hover {
+      background-color: #004d40;
+    }
+  </style>
+</head>
+<body>
+  <h1>Cuenta Regresiva para tus Eventos</h1>
+  
+  <div id="countdown-container">
+    <!-- <input type="datetime-local" id="event-date" />
+    <input type="text" id="event-description-input" placeholder="¿Qué va a pasar en esa fecha?" /> -->
+    <button onclick="showAddCountdown()">Agregar Evento</button>
+    <button class="btn" id="back-btn">Volver</button>
+    
+    <div id="countdown-list"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+
+    const backButton = document.getElementById("back-btn");
+    backButton.addEventListener("click", () => {
+      window.location.href = "panda.html";
+    });
+
+    let intervals = {};
+
+    // Cargar las cuentas regresivas almacenadas
+    function loadCountdowns() {
+      const countdowns = JSON.parse(localStorage.getItem('countdowns')) || [];
+      countdowns.forEach(countdown => startCountdown(countdown.date, countdown.description, countdown.id));
+    }
+
+    // Guardar una cuenta regresiva en el almacenamiento local
+    function saveCountdown(date, description, id) {
+      const countdowns = JSON.parse(localStorage.getItem('countdowns')) || [];
+      countdowns.push({ date, description, id });
+      localStorage.setItem('countdowns', JSON.stringify(countdowns));
+    }
+
+    // Eliminar una cuenta regresiva del almacenamiento local
+    function removeCountdown(id) {
+      let countdowns = JSON.parse(localStorage.getItem('countdowns')) || [];
+      countdowns = countdowns.filter(countdown => countdown.id !== id);
+      localStorage.setItem('countdowns', JSON.stringify(countdowns));
+    }
+
+    // Iniciar la cuenta regresiva y mostrarla en la página
+    function startCountdown(date, description, id) {
+      const countdownElement = document.createElement('div');
+      countdownElement.classList.add('countdown-item');
+      countdownElement.id = `countdown-${id}`;
+
+      const countdownDisplay = document.createElement('div');
+      countdownDisplay.id = `display-${id}`;
+      countdownDisplay.style.fontSize = '40px';
+      countdownDisplay.style.fontWeight = 'bold';
+      countdownDisplay.style.color = '#00796b';
+
+      const descriptionElement = document.createElement('div');
+      descriptionElement.textContent = description ? `Evento: ${description}` : 'No hay descripción para el evento.';
+      
+      const deleteButton = document.createElement('button');
+      deleteButton.textContent = 'Eliminar';
+      deleteButton.onclick = function() {
+        Swal.fire({
+          title: '¿Estás seguro?',
+          text: "¡Esta acción eliminará el evento permanentemente!",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Sí, eliminar',
+          cancelButtonText: 'Cancelar'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            clearInterval(intervals[id]);
+            document.getElementById(`countdown-${id}`).remove();
+            removeCountdown(id);
+            Swal.fire('¡Eliminado!', 'El evento ha sido eliminado.', 'success');
+          }
+        });
+      };
+
+      countdownElement.appendChild(countdownDisplay);
+      countdownElement.appendChild(descriptionElement);
+      countdownElement.appendChild(deleteButton);
+
+      document.getElementById('countdown-list').appendChild(countdownElement);
+
+      const eventDate = new Date(date).getTime();
+
+      intervals[id] = setInterval(function() {
+        const now = new Date().getTime();
+        const distance = eventDate - now;
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        countdownDisplay.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+
+        if (distance < 0) {
+          clearInterval(intervals[id]);
+          countdownDisplay.textContent = "¡El evento ha comenzado!";
+        }
+      }, 1000);
+    }
+
+    // Mostrar SweetAlert para agregar una cuenta regresiva
+    function showAddCountdown() {
+      Swal.fire({
+        title: 'Agregar Evento',
+        html: `
+          <input type="datetime-local" id="event-date-swal" class="swal2-input" placeholder="Fecha y hora">
+          <input type="text" id="event-description-swal" class="swal2-input" placeholder="Descripción del evento">
+        `,
+        confirmButtonText: 'Agregar',
+        showCancelButton: true,
+        cancelButtonText: 'Cancelar',
+        preConfirm: () => {
+          const date = Swal.getPopup().querySelector('#event-date-swal').value;
+          const description = Swal.getPopup().querySelector('#event-description-swal').value;
+          if (!date || !description) {
+            Swal.showValidationMessage('Por favor, ingrese una fecha y una descripción.');
+          }
+          return { date, description, id: Date.now() };
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const { date, description, id } = result.value;
+          startCountdown(date, description, id);
+          saveCountdown(date, description, id);
+          Swal.fire('¡Agregado!', 'El evento ha sido añadido.', 'success');
+        }
+      });
+    }
+
+    // Iniciar las cuentas regresivas al cargar la página
+    window.onload = function() {
+      loadCountdowns();
+    }
+  </script>
+</body>
+</html>

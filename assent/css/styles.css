@@ -161,12 +161,7 @@ header {
     margin-bottom: 30px;
     color: rgb(231, 217, 10);
 }
-.heart1 {
-    font-size: 20em; /* Tamaño ajustable según tu preferencia */
-    margin-top: 10px;
-    margin-bottom: 30px;
-    color: rgb(10, 106, 231);
-}
+
 
 .heart-button {
     position: relative; /* Asegura que el tooltip esté posicionado relativo a este elemento */
@@ -192,7 +187,12 @@ header {
 .heart-button:hover::after {
     opacity: 1; /* Muestra el tooltip al pasar el cursor */
 }
-
+.heart1 {
+    font-size: 20em; /* Tamaño ajustable según tu preferencia */
+    margin-top: 10px;
+    margin-bottom: 30px;
+    color: rgb(10, 106, 231);
+}
 .heart1-button {
     position: relative; /* Asegura que el tooltip esté posicionado relativo a este elemento */
     display: inline-block; /* Hace que el tooltip se comporte correctamente */
@@ -215,5 +215,185 @@ header {
 }
 
 .heart1-button:hover::after {
+    opacity: 1; /* Muestra el tooltip al pasar el cursor */
+}
+.heart2 {
+    font-size: 20em; /* Tamaño ajustable según tu preferencia */
+    margin-top: 10px;
+    margin-bottom: 30px;
+    color: rgb(231, 10, 216);
+}
+.heart2-button {
+    position: relative; /* Asegura que el tooltip esté posicionado relativo a este elemento */
+    display: inline-block; /* Hace que el tooltip se comporte correctamente */
+    text-decoration: none;
+}
+
+.heart2-button:hover::after {
+    content: "Tócame🕹️"; /* Texto del tooltip */
+    position: absolute;
+    bottom: 200px; /* Lo coloca encima del elemento padre */
+    left: 50%; /* Lo coloca en el centro horizontal del elemento padre */
+    transform: translateX(-50%); /* Lo ajusta para centrarlo correctamente */
+    background-color: black; /* Color de fondo del tooltip */
+    color: white; /* Color del texto del tooltip */
+    padding: 5px 10px; /* Espaciado interno del tooltip */
+    border-radius: 5px; /* Bordes redondeados del tooltip */
+    font-size: 12px; /* Tamaño del texto del tooltip */
+    opacity: 0; /* Inicialmente oculto */
+    transition: opacity 0.3s; /* Transición suave para la visibilidad */
+}
+
+.heart2-button:hover::after {
+    opacity: 1; /* Muestra el tooltip al pasar el cursor */
+}
+.heart3 {
+    font-size: 20em; /* Tamaño ajustable según tu preferencia */
+    margin-top: 10px;
+    margin-bottom: 30px;
+    color:rgb(152, 255, 152);
+}
+.heart3-button {
+    position: relative; /* Asegura que el tooltip esté posicionado relativo a este elemento */
+    display: inline-block; /* Hace que el tooltip se comporte correctamente */
+    text-decoration: none;
+}
+
+.heart3-button:hover::after {
+    content: "Tócame🗺️"; /* Texto del tooltip */
+    position: absolute;
+    bottom: 200px; /* Lo coloca encima del elemento padre */
+    left: 50%; /* Lo coloca en el centro horizontal del elemento padre */
+    transform: translateX(-50%); /* Lo ajusta para centrarlo correctamente */
+    background-color: black; /* Color de fondo del tooltip */
+    color: white; /* Color del texto del tooltip */
+    padding: 5px 10px; /* Espaciado interno del tooltip */
+    border-radius: 5px; /* Bordes redondeados del tooltip */
+    font-size: 12px; /* Tamaño del texto del tooltip */
+    opacity: 0; /* Inicialmente oculto */
+    transition: opacity 0.3s; /* Transición suave para la visibilidad */
+}
+
+.heart3-button:hover::after {
+    opacity: 1; /* Muestra el tooltip al pasar el cursor */
+}
+.heart4 {
+    font-size: 20em; /* Tamaño ajustable según tu preferencia */
+    margin-top: 10px;
+    margin-bottom: 30px;
+    color: rgb(255, 215, 0);
+}
+.heart4-button {
+    position: relative; /* Asegura que el tooltip esté posicionado relativo a este elemento */
+    display: inline-block; /* Hace que el tooltip se comporte correctamente */
+    text-decoration: none;
+}
+
+.heart4-button:hover::after {
+    content: "Tócame💿"; /* Texto del tooltip */
+    position: absolute;
+    bottom: 200px; /* Lo coloca encima del elemento padre */
+    left: 50%; /* Lo coloca en el centro horizontal del elemento padre */
+    transform: translateX(-50%); /* Lo ajusta para centrarlo correctamente */
+    background-color: black; /* Color de fondo del tooltip */
+    color: white; /* Color del texto del tooltip */
+    padding: 5px 10px; /* Espaciado interno del tooltip */
+    border-radius: 5px; /* Bordes redondeados del tooltip */
+    font-size: 12px; /* Tamaño del texto del tooltip */
+    opacity: 0; /* Inicialmente oculto */
+    transition: opacity 0.3s; /* Transición suave para la visibilidad */
+}
+
+.heart4-button:hover::after {
+    opacity: 1; /* Muestra el tooltip al pasar el cursor */
+}
+.heart5 {
+    font-size: 20em; /* Tamaño ajustable según tu preferencia */
+    margin-top: 10px;
+    margin-bottom: 30px;
+    color: rgb(255, 127, 80);
+}
+.heart5-button {
+    position: relative; /* Asegura que el tooltip esté posicionado relativo a este elemento */
+    display: inline-block; /* Hace que el tooltip se comporte correctamente */
+    text-decoration: none;
+}
+
+.heart5-button:hover::after {
+    content: "Tócame🔮"; /* Texto del tooltip */
+    position: absolute;
+    bottom: 200px; /* Lo coloca encima del elemento padre */
+    left: 50%; /* Lo coloca en el centro horizontal del elemento padre */
+    transform: translateX(-50%); /* Lo ajusta para centrarlo correctamente */
+    background-color: black; /* Color de fondo del tooltip */
+    color: white; /* Color del texto del tooltip */
+    padding: 5px 10px; /* Espaciado interno del tooltip */
+    border-radius: 5px; /* Bordes redondeados del tooltip */
+    font-size: 12px; /* Tamaño del texto del tooltip */
+    opacity: 0; /* Inicialmente oculto */
+    transition: opacity 0.3s; /* Transición suave para la visibilidad */
+}
+
+.heart5-button:hover::after {
+    opacity: 1; /* Muestra el tooltip al pasar el cursor */
+}
+.heart6 {
+    font-size: 20em; /* Tamaño ajustable según tu preferencia */
+    margin-top: 10px;
+    margin-bottom: 30px;
+    color: rgb(146, 18, 244);
+}
+.heart6-button {
+    position: relative; /* Asegura que el tooltip esté posicionado relativo a este elemento */
+    display: inline-block; /* Hace que el tooltip se comporte correctamente */
+    text-decoration: none;
+}
+
+.heart6-button:hover::after {
+    content: "Tócame📩"; /* Texto del tooltip */
+    position: absolute;
+    bottom: 200px; /* Lo coloca encima del elemento padre */
+    left: 50%; /* Lo coloca en el centro horizontal del elemento padre */
+    transform: translateX(-50%); /* Lo ajusta para centrarlo correctamente */
+    background-color: black; /* Color de fondo del tooltip */
+    color: white; /* Color del texto del tooltip */
+    padding: 5px 10px; /* Espaciado interno del tooltip */
+    border-radius: 5px; /* Bordes redondeados del tooltip */
+    font-size: 12px; /* Tamaño del texto del tooltip */
+    opacity: 0; /* Inicialmente oculto */
+    transition: opacity 0.3s; /* Transición suave para la visibilidad */
+}
+
+.heart6-button:hover::after {
+    opacity: 1; /* Muestra el tooltip al pasar el cursor */
+}
+.heart7 {
+    font-size: 20em; /* Tamaño ajustable según tu preferencia */
+    margin-top: 10px;
+    margin-bottom: 30px;
+    color: rgb(64, 224, 208);
+}
+.heart7-button {
+    position: relative; /* Asegura que el tooltip esté posicionado relativo a este elemento */
+    display: inline-block; /* Hace que el tooltip se comporte correctamente */
+    text-decoration: none;
+}
+
+.heart7-button:hover::after {
+    content: "Tócame⌛"; /* Texto del tooltip */
+    position: absolute;
+    bottom: 200px; /* Lo coloca encima del elemento padre */
+    left: 50%; /* Lo coloca en el centro horizontal del elemento padre */
+    transform: translateX(-50%); /* Lo ajusta para centrarlo correctamente */
+    background-color: black; /* Color de fondo del tooltip */
+    color: white; /* Color del texto del tooltip */
+    padding: 5px 10px; /* Espaciado interno del tooltip */
+    border-radius: 5px; /* Bordes redondeados del tooltip */
+    font-size: 12px; /* Tamaño del texto del tooltip */
+    opacity: 0; /* Inicialmente oculto */
+    transition: opacity 0.3s; /* Transición suave para la visibilidad */
+}
+
+.heart7-button:hover::after {
     opacity: 1; /* Muestra el tooltip al pasar el cursor */
 }

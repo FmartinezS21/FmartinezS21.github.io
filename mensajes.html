@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muro de Deseos Futuros</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        #bubble-container {
+            position: relative;
+            width: 80%;
+            height: 60%;
+            background: #ffffff;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .bubble {
+            position: absolute;
+            background: #e0f7fa;
+            border-radius: 15px;
+            padding: 10px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+            cursor: move;
+            max-width: 150px;
+            word-wrap: break-word;
+            z-index: 1;
+        }
+
+        .bubble:before {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 20px;
+            width: 0;
+            height: 0;
+            border-width: 10px;
+            border-style: solid;
+            border-color: #e0f7fa transparent transparent transparent;
+        }
+
+        #add-bubble, #delete-all, #back-button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background: #00796b;
+            color: #ffffff;
+            cursor: pointer;
+        }
+
+        #delete-all {
+            background: #c62828;
+        }
+
+        #back-button {
+            background: #1976d2;
+        }
+    </style>
+</head>
+<body>
+    <div id="bubble-container"></div>
+    <button id="add-bubble">Agregar burbuja</button>
+    <button id="delete-all">Eliminar todas las burbujas</button>
+    <button id="back-button">Volver</button>
+
+    <!-- SweetAlert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('bubble-container');
+            const addButton = document.getElementById('add-bubble');
+            const deleteAllButton = document.getElementById('delete-all');
+            const backButton = document.getElementById('back-button');
+
+            function createBubble(text, left = 0, top = 0) {
+                const bubble = document.createElement('div');
+                bubble.className = 'bubble';
+                bubble.textContent = text;
+                bubble.style.left = `${left}px`;
+                bubble.style.top = `${top}px`;
+                container.appendChild(bubble);
+
+                // Drag functionality
+                bubble.addEventListener('mousedown', (e) => {
+                    const offsetX = e.clientX - bubble.getBoundingClientRect().left;
+                    const offsetY = e.clientY - bubble.getBoundingClientRect().top;
+
+                    function onMouseMove(e) {
+                        let left = e.clientX - offsetX;
+                        let top = e.clientY - offsetY;
+
+                        const containerRect = container.getBoundingClientRect();
+                        const bubbleRect = bubble.getBoundingClientRect();
+
+                        if (left < 0) left = 0;
+                        if (top < 0) top = 0;
+                        if (left + bubbleRect.width > containerRect.width) {
+                            left = containerRect.width - bubbleRect.width;
+                        }
+                        if (top + bubbleRect.height > containerRect.height) {
+                            top = containerRect.height - bubbleRect.height;
+                        }
+
+                        bubble.style.left = `${left}px`;
+                        bubble.style.top = `${top}px`;
+                        
+                        // Save position to localStorage
+                        saveBubbles();
+                    }
+
+                    function onMouseUp() {
+                        document.removeEventListener('mousemove', onMouseMove);
+                        document.removeEventListener('mouseup', onMouseUp);
+                    }
+
+                    document.addEventListener('mousemove', onMouseMove);
+                    document.addEventListener('mouseup', onMouseUp);
+                });
+
+                // Click to delete bubble
+                bubble.addEventListener('click', () => {
+                    Swal.fire({
+                        title: 'Eliminar burbuja',
+                        text: "¿Estás seguro de que quieres eliminar esta burbuja?",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Eliminar',
+                        cancelButtonText: 'Cancelar'
+                    }).then(result => {
+                        if (result.isConfirmed) {
+                            bubble.remove();
+                            saveBubbles();
+                        }
+                    });
+                });
+            }
+
+            function saveBubbles() {
+                const bubbles = [];
+                document.querySelectorAll('.bubble').forEach(bubble => {
+                    const rect = bubble.getBoundingClientRect();
+                    bubbles.push({
+                        text: bubble.textContent,
+                        left: rect.left - container.getBoundingClientRect().left,
+                        top: rect.top - container.getBoundingClientRect().top
+                    });
+                });
+                localStorage.setItem('bubbles', JSON.stringify(bubbles));
+            }
+
+            function loadBubbles() {
+                const savedBubbles = JSON.parse(localStorage.getItem('bubbles')) || [];
+                savedBubbles.forEach(bubble => {
+                    createBubble(bubble.text, bubble.left, bubble.top);
+                });
+            }
+
+            addButton.addEventListener('click', () => {
+                Swal.fire({
+                    title: 'Escribe tu deseo futuro',
+                    input: 'text',
+                    inputPlaceholder: 'Escribe aquí...',
+                    showCancelButton: true,
+                    confirmButtonText: 'Agregar',
+                    cancelButtonText: 'Cancelar',
+                    inputValidator: (value) => {
+                        if (!value) {
+                            return '¡Necesitas escribir algo!';
+                        }
+                    }
+                }).then(result => {
+                    if (result.isConfirmed && result.value) {
+                        createBubble(result.value);
+                        saveBubbles();
+                    }
+                });
+            });
+
+            deleteAllButton.addEventListener('click', () => {
+                container.innerHTML = '';
+                localStorage.removeItem('bubbles');
+            });
+
+            backButton.addEventListener('click', () => {
+                history.back();
+            });
+
+            loadBubbles();
+        });
+    </script>
+</body>
+</html>

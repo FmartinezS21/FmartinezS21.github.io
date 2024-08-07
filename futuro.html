@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="assent/images/corazon5.png" type="image/png">
+  <title>Deseos Futuros</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #f0f4f8, #d4e4f4);
+      color: #333;
+      text-align: center;
+      overflow: hidden; /* Para evitar barras de desplazamiento no deseadas */
+    }
+    h2 {
+      margin-top: 50px;
+      font-size: 2em;
+      color: #333;
+    }
+    #wish-form {
+      margin: 20px auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    #wish-input {
+      padding: 10px;
+      font-size: 1em;
+      border: 2px solid #007bff;
+      border-radius: 5px;
+      width: 80%;
+      max-width: 500px;
+      margin-bottom: 10px;
+      transition: border-color 0.3s;
+    }
+    #wish-input:focus {
+      border-color: #0056b3;
+      outline: none;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 1em;
+      color: #fff;
+      background-color: #007bff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    button:active {
+      transform: scale(0.98);
+    }
+    #post-it-container {
+      position: relative;
+      margin-top: 20px;
+      width: 100%;
+      height: calc(100vh - 120px); /* Ajusta el espacio disponible para los post-its */
+      overflow: auto;
+      border: 1px dashed #000; /* Añadir borde para simular pizarra */
+    }
+    .wish {
+      position: absolute;
+      width: 150px; /* Tamaño del post-it */
+      height: 150px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      padding: 10px;
+      box-sizing: border-box;
+      font-size: 0.9em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: rotate(-1deg); /* Inclinar un poco para el efecto de post-it */
+      cursor: move;
+      background-color: #ffff; /* Color inicial */
+    }
+    .wish:hover {
+      transform: rotate(-1deg) scale(1.02);
+    }
+    .delete-button {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background-color: #ff4d4d;
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 14px;
+      line-height: 0;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .wish:hover .delete-button {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <h2>Deseos Futuros</h2>
+  <form id="wish-form">
+    <input type="text" id="wish-input" placeholder="Escribe tu deseo" required>
+    <button type="submit">Agregar</button>
+  </form>
+  <button class="btn" id="back-btn">Volver</button>
+  <div id="post-it-container"></div>
+
+  <script>
+
+    const backButton = document.getElementById("back-btn");
+    backButton.addEventListener("click", () => {
+          window.location.href = "panda.html";
+        });
+    // Función para obtener un color pastel aleatorio
+    function getRandomPastelColor() {
+      const colors = [
+        '#fcb0d8', '#f6c5b9', '#f6d0d1', '#d3a2c9', '#b6d5f2', 
+        '#c3e1c3', '#f9d6d1', '#e0e0eb', '#f7e1b5', '#c5c6f3'
+      ];
+      return colors[Math.floor(Math.random() * colors.length)];
+    }
+
+    // Función para cargar los deseos desde localStorage
+    function loadWishes() {
+      const wishes = JSON.parse(localStorage.getItem('wishes')) || [];
+      const wishesDiv = document.getElementById('post-it-container');
+      wishesDiv.innerHTML = ''; // Limpiar los deseos actuales antes de cargar
+      wishes.forEach(wish => {
+        const newWish = document.createElement('div');
+        newWish.classList.add('wish');
+        newWish.textContent = wish.text;
+        newWish.style.left = `${wish.left}px`;
+        newWish.style.top = `${wish.top}px`;
+        newWish.style.backgroundColor = wish.color;
+        
+        const deleteButton = document.createElement('button');
+        deleteButton.classList.add('delete-button');
+        deleteButton.textContent = 'x';
+        deleteButton.addEventListener('click', () => {
+          newWish.remove();
+          deleteWish(wish.text);
+        });
+
+        newWish.appendChild(deleteButton);
+        makeDraggable(newWish);
+        wishesDiv.appendChild(newWish);
+      });
+    }
+
+    // Función para guardar un nuevo deseo en localStorage
+    function saveWish(wishText, left, top, color) {
+      const wishes = JSON.parse(localStorage.getItem('wishes')) || [];
+      wishes.push({ text: wishText, left: left, top: top, color: color });
+      localStorage.setItem('wishes', JSON.stringify(wishes));
+    }
+
+    // Función para eliminar un deseo de localStorage
+    function deleteWish(wishText) {
+      const wishes = JSON.parse(localStorage.getItem('wishes')) || [];
+      const updatedWishes = wishes.filter(wish => wish.text !== wishText);
+      localStorage.setItem('wishes', JSON.stringify(updatedWishes));
+    }
+
+    document.getElementById('wish-form').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const wishInput = document.getElementById('wish-input');
+      const wishText = wishInput.value.trim();
+      if (wishText) {
+        const wishesDiv = document.getElementById('post-it-container');
+        const newWish = document.createElement('div');
+        newWish.classList.add('wish');
+        newWish.textContent = wishText;
+
+        // Posicionar el nuevo post-it en una posición aleatoria dentro del contenedor
+        const containerWidth = wishesDiv.clientWidth;
+        const containerHeight = wishesDiv.clientHeight;
+        const left = Math.random() * (containerWidth - 150);
+        const top = Math.random() * (containerHeight - 150);
+        const color = getRandomPastelColor();
+        newWish.style.left = `${left}px`;
+        newWish.style.top = `${top}px`;
+        newWish.style.backgroundColor = color;
+
+        // Crear botón de eliminación y agregarlo al post-it
+        const deleteButton = document.createElement('button');
+        deleteButton.classList.add('delete-button');
+        deleteButton.textContent = 'x';
+        deleteButton.addEventListener('click', () => {
+          newWish.remove();
+          deleteWish(wishText);
+        });
+
+        newWish.appendChild(deleteButton);
+
+        // Agregar y guardar el nuevo post-it
+        makeDraggable(newWish);
+        wishesDiv.appendChild(newWish);
+        saveWish(wishText, left, top, color);
+
+        wishInput.value = '';
+      }
+    });
+
+    // Función para hacer que los post-its sean arrastrables
+    function makeDraggable(element) {
+      let offsetX, offsetY, isDragging = false;
+
+      element.addEventListener('mousedown', function(event) {
+        isDragging = true;
+        offsetX = event.clientX - parseInt(window.getComputedStyle(element).left, 10);
+        offsetY = event.clientY - parseInt(window.getComputedStyle(element).top, 10);
+      });
+
+      document.addEventListener('mousemove', function(event) {
+        if (isDragging) {
+          let newLeft = event.clientX - offsetX;
+          let newTop = event.clientY - offsetY;
+          
+          // Limitar el movimiento dentro del contenedor
+          const container = document.getElementById('post-it-container');
+          const containerRect = container.getBoundingClientRect();
+          const elementRect = element.getBoundingClientRect();
+
+          if (newLeft < 0) newLeft = 0;
+          if (newTop < 0) newTop = 0;
+          if (newLeft + elementRect.width > containerRect.width) newLeft = containerRect.width - elementRect.width;
+          if (newTop + elementRect.height > containerRect.height) newTop = containerRect.height - elementRect.height;
+
+          element.style.left = `${newLeft}px`;
+          element.style.top = `${newTop}px`;
+        }
+      });
+
+      document.addEventListener('mouseup', function() {
+        isDragging = false;
+      });
+    }
+
+    loadWishes(); // Cargar deseos al cargar la página
+  </script>
+</body>
+</html>

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="assent/images/corazon5.png" type="image/png">
+  <title>Quiz Personalizado</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(to bottom, #FF9A8B, #FF6F61, #D83A34, #A63D40);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background: rgba(255, 255, 255, 0.8);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+    .start-screen {
+      display: block;
+    }
+    .quiz-container {
+      display: none;
+    }
+    .question {
+      font-size: 24px;
+      margin-bottom: 20px;
+      color: #333;
+    }
+    .choices {
+      list-style: none;
+      padding: 0;
+    }
+    .choices li {
+      background: #f0f0f0;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .choices li:hover {
+      background: #ddd;
+    }
+    .btn {
+      background: #4caf50;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+      margin: 5px;
+    }
+    .btn:hover {
+      background: #45a049;
+    }
+    #result {
+      margin-top: 20px;
+      font-size: 20px;
+      color: #333;
+    }
+    .btn-container {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="start-screen" id="start-screen">
+      <h2>¿Cuánto sabes sobre nosotros?</h2>
+      <button class="btn" id="start-btn">¡Empezar el Quiz!</button>
+      <button class="btn" id="back-btn">Volver</button>
+    </div>
+    <div class="quiz-container" id="quiz-container">
+      <div class="question" id="question"></div>
+      <ul class="choices" id="choices"></ul>
+      <div id="result"></div>
+      <div class="btn-container">
+        <button class="btn" id="restart-btn" style="display: none;">Volver a jugar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const quizData = [
+      // Aquí van tus datos de quiz
+      {
+        question: "¿Cuál es mi color favorito?",
+        choices: ["Rojo", "Azul", "Verde", "Morado"],
+        answer: "Morado"
+      },
+      {
+        question: "¿Dónde nos conocimos?",
+        choices: ["Playa", "Universidad", "Fiesta", "Parque"],
+        answer: "Universidad"
+      },
+      {
+        question: "¿Cuál es el primer lugar al que fuimos juntos?",
+        choices: ["Restaurante", "Cine", "Playa", "Parque"],
+        answer: "Playa"
+      },
+      {
+        question: "¿Cuál es nuestro lugar favorito para salir?",
+        choices: ["Cine", "Playa", "Ciudad", "Campo"],
+        answer: "Cine"
+      },
+      {
+        question: "¿Qué es lo que más nos gusta hacer cuando estamos juntos?",
+        choices: ["Ir al cine", "Ver peliculas", "Cocinar juntos", "Jugar videojuegos"],
+        answer: "Ver peliculas"
+      },
+      {
+        question: "¿Cuál es mi comida favorita?",
+        choices: ["Pizza", "Sushi", "Tacos", "Pasta"],
+        answer: "Pasta"
+      },
+      {
+        question: "¿Cuál es la película que más nos gusta ver juntos?",
+        choices: ["Comedia romántica", "Acción", "Drama", "Ciencia ficción"],
+        answer: "Ciencia ficción"
+      },
+      {
+        question: "¿Qué deporte es mi favorito?",
+        choices: ["Fútbol", "Ciclismo", "Natación", "Baloncesto"],
+        answer: "Fútbol"
+      },
+      {
+        question: "¿Qué tipo de música me gusta más?",
+        choices: ["Pop", "Rock", "Jazz", "Electronica"],
+        answer: "Electronica"
+      },
+      {
+        question: "¿Cuál es mi libro favorito?",
+        choices: ["La bruja bella y el solitario", "El Hobbit", "Cien años de soledad", "Orgullo y prejuicio"],
+        answer: "La bruja bella y el solitario"
+      },
+      {
+        question: "¿Cuál es mi hobby principal?",
+        choices: ["Fotografía", "Pintura", "Videojuegos", "Deportes"],
+        answer: "Videojuegos"
+      },
+      {
+        question: "¿Qué serie de televisión es mi favorita?",
+        choices: ["The walking dead", "Game of thrones", "The house of dragons", "Breaking Bad"],
+        answer: "Game of thrones"
+      },
+      {
+        question: "¿Qué lugar me gustaria visitar?",
+        choices: ["Japón", "Italia", "Australia", "España"],
+        answer: "España"
+      },
+      {
+        question: "¿Cuál es mi animal favorito?",
+        choices: ["Perro", "Gato", "Lobo", "Pájaro"],
+        answer: "Lobo"
+      },
+      {
+        question: "¿Cuál es el postre que más me gusta?",
+        choices: ["Helado", "Tarta de chocolate", "Cheesecake", "Brownies"],
+        answer: "Cheesecake"
+      },
+      {
+        question: "¿Qué festividad me gusta más?",
+        choices: ["Navidad", "Halloween", "Cumpleaños", "Año Nuevo"],
+        answer: "Navidad"
+      },
+      {
+        question: "¿Cuál es la bebida favorita de tu pareja?",
+        choices: ["Café", "Té", "Refresco", "Jugo"],
+        answer: "Té"
+      },
+      {
+        question: "¿Cuál es mi lugar favorito para una cena romántica?",
+        choices: ["Restaurante elegante", "Cocinar en casa", "Picnic en el parque", "Cena en la playa"],
+        answer: "Restaurante elegante"
+      },
+      {
+        question: "¿Qué tipo de películas nos gusta ver en pareja?",
+        choices: ["Comedia", "Terror", "Documentales", "Animación"],
+        answer: "Comedia"
+      },
+      {
+        question: "¿Cuál es el destino soñado para unas vacaciones?",
+        choices: ["Europa", "America", "Asia", "Oceania"],
+        answer: "Europa"
+      },
+      {
+        question: "¿Qué es lo que más aprecio en una relación?",
+        choices: ["Confianza", "Comunicación", "Respeto", "Divertirse juntos"],
+        answer: "Confianza"
+      }
+      // Agrega más preguntas aquí...
+    ];
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+
+    const startScreen = document.getElementById("start-screen");
+    const quizContainer = document.getElementById("quiz-container");
+    const startButton = document.getElementById("start-btn");
+    const backButton = document.getElementById("back-btn");
+    const questionElement = document.getElementById("question");
+    const choicesList = document.getElementById("choices");
+    const resultElement = document.getElementById("result");
+    const restartButton = document.getElementById("restart-btn");
+
+    startButton.addEventListener("click", () => {
+      startScreen.style.display = "none";
+      quizContainer.style.display = "block";
+      loadQuestion();
+    });
+
+    backButton.addEventListener("click", () => {
+      window.location.href = "panda.html";
+    });
+
+    restartButton.addEventListener("click", () => {
+      window.location.reload();  // Recarga la página para reiniciar el cuestionario
+    });
+
+    function loadQuestion() {
+      const currentQuestion = quizData[currentQuestionIndex];
+      questionElement.textContent = currentQuestion.question;
+      choicesList.innerHTML = "";
+      currentQuestion.choices.forEach(choice => {
+        const li = document.createElement("li");
+        li.textContent = choice;
+        li.addEventListener("click", () => selectChoice(choice));
+        choicesList.appendChild(li);
+      });
+    }
+
+    function selectChoice(choice) {
+      const currentQuestion = quizData[currentQuestionIndex];
+      if (choice === currentQuestion.answer) {
+        score++;
+      }
+      currentQuestionIndex++;
+      if (currentQuestionIndex < quizData.length) {
+        loadQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      questionElement.style.display = "none";
+      choicesList.style.display = "none";
+      resultElement.textContent = `Tu puntuación es ${score}/${quizData.length}`;
+      restartButton.style.display = "inline-block";
+    }
+  </script>
+</body>
+</html>

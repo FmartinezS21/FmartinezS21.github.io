@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mapa de Recuerdos</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/sweetalert2@11/dist/sweetalert2.min.css">
+  <link rel="icon" href="assent/images/corazon5.png" type="image/png">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: linear-gradient(to right, #6a0dad, #a4508b);
+    }
+    #map {
+      height: 600px;
+      width: 80%;
+      margin-top: 20px;
+    }
+    .visited-marker {
+      background-color: #28a745;
+      border-radius: 50%;
+      width: 16px;
+      height: 16px;
+      border: 2px solid #ffffff;
+    }
+    .future-marker {
+      background-color: #007bff;
+      border-radius: 50%;
+      width: 16px;
+      height: 16px;
+      border: 2px solid #ffffff;
+    }
+    .leaflet-popup-content-wrapper {
+      background: #ffffff;
+      border-radius: 5px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.2);
+    }
+    .controls {
+      margin-top: 20px;
+      display: flex;
+      gap: 10px;
+    }
+    .controls button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      color: #ffffff;
+      font-size: 16px;
+    }
+    .add-visited {
+      background-color: #28a745;
+    }
+    .add-future {
+      background-color: #007bff;
+    }
+    .btn{
+      background-color: #34373a;
+    }
+    .clear-cache {
+      background-color: #dc3545;
+    }
+    .list-container {
+      width: 80%;
+      max-width: 800px;
+      margin: 20px;
+      padding: 10px;
+      background-color: #f8f9fa;
+      border-radius: 5px;
+    }
+    .list-container h2 {
+      margin: 0;
+      padding-bottom: 10px;
+    }
+    .list-item {
+      margin-bottom: 5px;
+    }
+    .info-section {
+      width: 80%;
+      max-width: 800px;
+      margin: 20px;
+      padding: 20px;
+      background-color: #ffffff;
+      border-radius: 5px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.2);
+    }
+  </style>
+</head>
+<body>
+  <div class="info-section">
+    <h2>Cómo Funciona el Mapa</h2>
+    <p>Para agregar un pais visitado hacer click primero en "Agregar País Visitado", luego en el mapa y finalmente ingresar el nombre.</p>
+    <p>Para agregar un pais por visitar hacer click primero en "Agregar País Futuro", ingresar el nombre y luego indicar en el mapa.</p>
+    <!-- Rellena este apartado con la explicación sobre el funcionamiento del mapa -->
+  </div>
+  <div id="map"></div>
+  <div class="controls">
+    <button class="add-visited">Agregar País Visitado</button>
+    <button class="add-future">Agregar País Futuro</button>
+    <button class="clear-cache">Borrar Caché</button>
+    <button class="btn" id="back-btn">Volver</button>
+  </div>
+  <div class="list-container">
+    <h2>Países Visitados</h2>
+    <ul id="visited-list"></ul>
+    <h2>Países por Visitar</h2>
+    <ul id="future-list"></ul>
+  </div>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+  <script>
+    const map = L.map('map').setView([20, 0], 2);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Función para agregar un marcador
+    function addMarker(lat, lng, name, isFuture) {
+      const markerOptions = isFuture 
+        ? {icon: L.divIcon({className: 'future-marker'})}
+        : {icon: L.divIcon({className: 'visited-marker'})};
+
+      L.marker([lat, lng], markerOptions).addTo(map)
+        .bindPopup(`${isFuture ? 'Futuro: ' : 'Visitado: '}${name}`);
+    }
+
+    // Función para actualizar las listas de países visitados y futuros
+    function updateList() {
+      const visitedList = document.getElementById('visited-list');
+      const futureList = document.getElementById('future-list');
+      
+      visitedList.innerHTML = '';
+      futureList.innerHTML = '';
+      
+      const visitedCountries = JSON.parse(localStorage.getItem('visitedCountries')) || [];
+      const futureCountries = JSON.parse(localStorage.getItem('futureCountries')) || [];
+
+      visitedCountries.forEach(country => {
+        const listItem = document.createElement('li');
+        listItem.className = 'list-item';
+        listItem.textContent = country.name;
+        visitedList.appendChild(listItem);
+      });
+
+      futureCountries.forEach(country => {
+        const listItem = document.createElement('li');
+        listItem.className = 'list-item';
+        listItem.textContent = country.name;
+        futureList.appendChild(listItem);
+      });
+    }
+
+    // Función para guardar los datos en localStorage
+    function saveData() {
+      const visitedCountries = JSON.parse(localStorage.getItem('visitedCountries')) || [];
+      const futureCountries = JSON.parse(localStorage.getItem('futureCountries')) || [];
+      localStorage.setItem('visitedCountries', JSON.stringify(visitedCountries));
+      localStorage.setItem('futureCountries', JSON.stringify(futureCountries));
+    }
+
+    // Función para cargar los datos desde localStorage
+    function loadData() {
+      const visitedCountries = JSON.parse(localStorage.getItem('visitedCountries')) || [];
+      const futureCountries = JSON.parse(localStorage.getItem('futureCountries')) || [];
+
+      visitedCountries.forEach(country => {
+        addMarker(country.lat, country.lng, country.name, false);
+      });
+
+      futureCountries.forEach(country => {
+        addMarker(country.lat, country.lng, country.name, true);
+      });
+      
+      updateList();
+    }
+
+    // Función para borrar el caché
+    function clearCache() {
+      localStorage.removeItem('visitedCountries');
+      localStorage.removeItem('futureCountries');
+      map.eachLayer(layer => {
+        if (layer instanceof L.Marker) {
+          map.removeLayer(layer);
+        }
+      });
+      updateList();
+    }
+
+    // Agregar un país visitado
+    document.querySelector('.add-visited').addEventListener('click', function() {
+      map.once('click', function(e) {
+        Swal.fire({
+          title: 'Agregar país visitado',
+          input: 'text',
+          inputLabel: 'Nombre del país',
+          inputPlaceholder: 'Ingrese el nombre del país',
+          showCancelButton: true,
+          confirmButtonText: 'Agregar',
+          cancelButtonText: 'Cancelar',
+          inputValidator: (value) => {
+            if (!value) {
+              return 'Debe ingresar el nombre del país!';
+            }
+          }
+        }).then((result) => {
+          if (result.isConfirmed) {
+            const lat = e.latlng.lat;
+            const lng = e.latlng.lng;
+            const countryName = result.value;
+
+            addMarker(lat, lng, countryName, false);
+
+            const visitedCountries = JSON.parse(localStorage.getItem('visitedCountries')) || [];
+            visitedCountries.push({ name: countryName, lat: lat, lng: lng });
+            localStorage.setItem('visitedCountries', JSON.stringify(visitedCountries));
+            
+            updateList();
+          }
+        });
+      });
+    });
+
+    // Agregar un país futuro
+    document.querySelector('.add-future').addEventListener('click', function() {
+      Swal.fire({
+        title: 'Agregar país futuro',
+        input: 'text',
+        inputLabel: 'Nombre del país',
+        inputPlaceholder: 'Ingrese el nombre del país',
+        showCancelButton: true,
+        confirmButtonText: 'Agregar',
+        cancelButtonText: 'Cancelar',
+        inputValidator: (value) => {
+          if (!value) {
+            return 'Debe ingresar el nombre del país!';
+          }
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const countryName = result.value;
+          
+          // Pedir al usuario que haga clic en el mapa para seleccionar la ubicación
+          map.once('click', function(e) {
+            const lat = e.latlng.lat;
+            const lng = e.latlng.lng;
+
+            addMarker(lat, lng, countryName, true);
+
+            const futureCountries = JSON.parse(localStorage.getItem('futureCountries')) || [];
+            futureCountries.push({ name: countryName, lat: lat, lng: lng });
+            localStorage.setItem('futureCountries', JSON.stringify(futureCountries));
+
+            updateList();
+          });
+        }
+      });
+    });
+
+    // Borrar caché
+    document.querySelector('.clear-cache').addEventListener('click', clearCache);
+
+    // Cargar datos al inicio
+    loadData();
+
+    const backButton = document.getElementById("back-btn");
+    backButton.addEventListener("click", () => {
+      window.location.href = "panda.html";
+    });
+  </script>
+</body>
+</html>
