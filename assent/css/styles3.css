@@ -1,0 +1,200 @@
+/* reset css */
+
+* {
+  min-width: 0;
+  font: inherit;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+img,
+video,
+svg {
+  display: block;
+  height: auto;
+  max-width: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+/* styles */
+/* TODO: Cambiar la fuente
+
+* {
+  font-family: comic-sans;
+} */
+
+body {
+  background-color: #fad7df;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+
+  gap: 3rem;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container-letter {
+  position: relative;
+  margin-top: 50px;
+}
+
+.cover {
+  position: absolute;
+  border-left: 600px solid transparent;
+  border-right: 600px solid transparent;
+  border-top: 300px solid #fe3334;
+  border-bottom: 300px solid transparent;
+
+  /*  */
+  transition: transform .75s;
+  transform-origin: top;
+  top: 50px;
+}
+
+.paper {
+  position: absolute;
+  padding: 1.5rem;
+  line-height: 2rem;
+  right: 5px;
+  z-index: -1;
+  background: white;
+  width: 1190px; /* Ajusta el ancho del papel */
+  height: 500px; /* Ajusta la altura del papel */
+  transition: all .75s;
+  top: 60px;
+}
+
+.message {
+  text-indent: 200px; /* Ajusta la sangría del texto */
+}
+
+.letter {
+  position: relative; /* Ajusta la posición según necesites */
+  border-left: 600px solid #ff989e; /* Ajusta el ancho del borde izquierdo */
+  border-right: 600px solid #ff989e; /* Ajusta el ancho del borde derecho */
+  border-top: 300px solid transparent; /* Ajusta el tamaño del borde superior */
+  border-bottom: 300px solid #ff858a; /* Ajusta el tamaño del borde inferior */
+  top: 50px; 
+}
+
+.options {
+  display: flex;
+  gap: 5rem;
+  margin-top: 20px; /* Ajusta el margen superior para bajar los botones */
+}
+
+.options button {
+  color: #ff3234;
+  font-weight: 700;
+  border-radius: 3px;
+  background: #fad7df;
+  padding: 0.5rem 1rem;
+  border: 1px solid #fe3334;
+  cursor: pointer;
+}
+
+.options button:hover {
+  background: #ff989e;
+  color: white;
+}
+
+.open-cover {
+  transform: rotatex(180deg);
+}
+
+.open-paper {
+  animation: openPaper .5s forwards;
+}
+
+@keyframes openPaper {
+  0% {
+    top: 0;
+  }
+  100% {
+    top: -155px;
+  }
+}
+
+.close-paper {
+  animation: closePaper .5s forwards;
+}
+
+@keyframes closePaper {
+  0% {
+    top: -120px;
+  }
+  100% {
+    top: 60px;
+  }
+}
+
+.open-letter {
+  animation: openLetter .5s forwards;
+}
+
+@keyframes openLetter {
+  0% {
+    top: 50;
+  }
+  100% {
+    top: 100px;
+  }
+}
+
+.close-letter {
+  animation: closeLetter .5s forwards;
+}
+
+@keyframes closeLetter {
+  0% {
+    top: 100px;
+  }
+  100% {
+    top: 50px;
+  }
+}
+
+
+.heart {
+  display: none;
+  position: absolute;
+  top: 25%;
+  left: 46.5%;
+  margin: auto;
+  font-size: 3rem;
+  color: #fe3334;
+  animation: crecer 1s forwards;
+}
+@keyframes crecer {
+  0% {
+    scale: 1;
+    opacity: 1;
+  }
+  100% {
+    scale: 3;
+    opacity: 0;
+
+  }
+}

@@ -1,0 +1,182 @@
+/* reset css */
+
+* {
+    min-width: 0;
+    font: inherit;
+  }
+  
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+  
+  img,
+  video,
+  svg {
+    display: block;
+    height: auto;
+    max-width: 100%;
+  }
+  
+  body {
+    margin: 0;
+    min-height: 100dvh;
+  }
+  
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+  
+  p {
+    text-wrap: pretty;
+  }
+  
+  /* starts here */
+  
+  body {
+    background-color: palegoldenrod;
+    height: 100vh;
+  
+    & main {
+  
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+  
+      & h1 {
+        font-size: 2.5rem;
+        text-align: center;
+        font-weight: 700;
+      }
+  
+      & .options {
+        font-size: 1.5rem;
+        font-weight: 600;
+  
+  
+        & button {
+          padding: .5rem 1.5rem;
+          border: 2px solid rgba(0, 0, 0, .9);
+          border-radius: 5px;
+          cursor: pointer;
+          box-shadow: 1px 1px 1px rgba(0, 0, 0, .2);
+        }
+  
+        & button:hover {
+          box-shadow: 2px 2px 2px rgba(0, 0, 0, .4);
+        }
+  
+        & button#yes {
+          background-color: #97cfaa;
+          margin-right: 2rem;
+        }
+  
+        & button#no {
+          background-color: #f36c46;
+        }
+      }
+    }
+  }
+  
+  #message {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: palegoldenrod;
+    /* display: flex; */
+    display: none;
+    justify-content: center;
+    align-items: center;
+  
+    & h1 {
+      font-size: 3rem;
+      text-align: center;
+      font-weight: 600;
+      animation: palpitation 2s ease-in-out infinite;
+      line-height: 4rem;
+    }
+  }
+  
+  @keyframes palpitation {
+    0% {
+      transform: scale(1);
+    }
+  
+    50% {
+      transform: scale(1.1);
+    }
+  
+    100% {
+      transform: scale(1);
+    }
+  }
+
+
+  .heart {
+    font-size: 20em; /* Tamaño ajustable según tu preferencia */
+    margin-top: 10px;
+    margin-bottom: 30px;
+    color: rgb(231, 217, 10);
+}
+.heart1 {
+    font-size: 5em; /* Tamaño ajustable según tu preferencia */
+    margin-top: 10px;
+    margin-bottom: 30px;
+    color: #ff0000 ;
+}
+
+.heart-button {
+    position: relative; /* Asegura que el tooltip esté posicionado relativo a este elemento */
+    display: inline-block;
+    text-decoration: none !important;/* Hace que el tooltip se comporte correctamente */
+}
+
+.heart-button:hover::after {
+    content: "Tocame💌"; /* Texto del tooltip */
+    position: absolute;
+    bottom: -200px; /* Lo coloca encima del elemento padre */
+    left: 50%; /* Lo coloca en el centro horizontal del elemento padre */
+    transform: translateX(-50%); /* Lo ajusta para centrarlo correctamente */
+    background-color: black; /* Color de fondo del tooltip */
+    color: white; /* Color del texto del tooltip */
+    padding: 5px 10px; /* Espaciado interno del tooltip */
+    border-radius: 5px; /* Bordes redondeados del tooltip */
+    font-size: 12px; /* Tamaño del texto del tooltip */
+    opacity: 0; /* Inicialmente oculto */
+    transition: opacity 0.3s; /* Transición suave para la visibilidad */
+}
+
+.heart-button:hover::after {
+    opacity: 1; /* Muestra el tooltip al pasar el cursor */
+}
+
+.heart1-button {
+    position: relative; /* Asegura que el tooltip esté posicionado relativo a este elemento */
+    display: inline-block; /* Hace que el tooltip se comporte correctamente */
+}
+
+.heart1-button:hover::after {
+    content: "Tócame❤️"; /* Texto del tooltip */
+    position: absolute;
+    bottom: -20px; /* Lo coloca encima del elemento padre */
+    left: 50%; /* Lo coloca en el centro horizontal del elemento padre */
+    transform: translateX(-50%); /* Lo ajusta para centrarlo correctamente */
+    background-color: black; /* Color de fondo del tooltip */
+    color: white; /* Color del texto del tooltip */
+    padding: 5px 10px; /* Espaciado interno del tooltip */
+    border-radius: 5px; /* Bordes redondeados del tooltip */
+    font-size: 12px; /* Tamaño del texto del tooltip */
+    opacity: 0; /* Inicialmente oculto */
+    transition: opacity 0.3s; /* Transición suave para la visibilidad */
+}
+
+.heart1-button:hover::after {
+    opacity: 1; /* Muestra el tooltip al pasar el cursor */
+}
